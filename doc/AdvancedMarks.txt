@@ -1,0 +1,122 @@
+*AdvancedMarks.txt*     Work with marks with more power.
+
+		       ADVANCED MARKS    by Ingo Karkat
+							   *AdvancedMarks.vim*
+description			|AdvancedMarks-description|
+usage				|AdvancedMarks-usage|
+installation			|AdvancedMarks-installation|
+configuration			|AdvancedMarks-configuration|
+integration			|AdvancedMarks-integration|
+limitations			|AdvancedMarks-limitations|
+known problems			|AdvancedMarks-known-problems|
+todo				|AdvancedMarks-todo|
+history				|AdvancedMarks-history|
+
+==============================================================================
+DESCRIPTION					   *AdvancedMarks-description*
+
+This plugin ...
+
+HOW IT WORKS								     *
+
+SOURCE									     *
+
+- :YankMarks is inspired by http://stackoverflow.com/a/16314609/813602
+
+SEE ALSO								     *
+(Plugins offering complementary functionality, or plugins using this library.)
+
+RELATED WORKS								     *
+(Alternatives from other authors, other approaches, references not used here.)
+
+==============================================================================
+USAGE							 *AdvancedMarks-usage*
+								  *:YankMarks*
+:YankMarks [{marks}] [{register}]
+			Yank all marked (with [a-z] / {marks} marks) lines
+			into the default register / {register} (in the order
+			of the marks).
+							     *:YankMarkRanges*
+:YankMarkRanges [{marks}] [{register}]
+			Yank all ranges of lines that start with a lowercase
+			[a-z] / {marks} mark and end with the corresponding
+			uppercase [A-Z] mark in the current buffer into the
+			default register / {register} (in the order of the
+			marks).
+						       *:SetMarks* *:SetMARKS*
+:SetMarks {lnum[:col]} [...]
+			Set available lowercase marks to the passed lines [and
+			virtual column]. The numbers can be separated by any
+			text.
+:SetMARKS {lnum[:col]} [...]
+			Like |:SetMarks|, but use global uppercase marks.
+								   *:Delmarks*
+:Delmarks[!]		Delete all named marks a-z (current buffer, with [!]
+			in all buffers) and global file marks A-Z (with [!]
+			also in the |viminfo| file).
+:Delmarks[!] {marks}	Delete {marks}, with [!] lowercase ones in all
+			buffers, and uppercase ones also in the |viminfo|
+			file.
+
+EXAMPLE						       *AdvancedMarks-example*
+
+==============================================================================
+INSTALLATION					  *AdvancedMarks-installation*
+
+The code is hosted in a Git repo at https://github.com/inkarkat/vim-AdvancedMarks
+You can use your favorite plugin manager, or "git clone" into a directory used
+for Vim |packages|. Stable releases are on the "master" branch, the latest
+unstable snapshot on "develop".
+
+This script is also packaged as a |vimball|. If you have the "gunzip"
+decompressor in your PATH, simply edit the *.vmb.gz package in Vim; otherwise,
+decompress the archive first, e.g. using WinZip. Inside Vim, install by
+sourcing the vimball or via the |:UseVimball| command. >
+    vim AdvancedMarks*.vmb.gz
+    :so %
+To uninstall, use the |:RmVimball| command.
+
+DEPENDENCIES					  *AdvancedMarks-dependencies*
+
+- Requires Vim 7.0 or higher.
+
+==============================================================================
+CONFIGURATION					 *AdvancedMarks-configuration*
+
+For a permanent configuration, put the following commands into your |vimrc|:
+configvar
+							 *AdvancedMarks-remap*
+plugmap
+==============================================================================
+INTEGRATION					   *AdvancedMarks-integration*
+
+==============================================================================
+LIMITATIONS					   *AdvancedMarks-limitations*
+
+KNOWN PROBLEMS					*AdvancedMarks-known-problems*
+
+TODO							  *AdvancedMarks-todo*
+
+IDEAS							 *AdvancedMarks-ideas*
+
+CONTRIBUTING					    *AdvancedMarks-contribute*
+
+Report any bugs, send patches, or suggest features via the issue tracker at
+https://github.com/inkarkat/vim-AdvancedMarks/issues or email (address below).
+
+==============================================================================
+HISTORY						       *AdvancedMarks-history*
+
+GOAL
+First published version.
+
+0.01	01-May-2013
+Started development.
+
+==============================================================================
+Copyright: (C) 2013-2017 Ingo Karkat
+The VIM LICENSE applies to this plugin; see |copyright|.
+
+Maintainer:	Ingo Karkat <ingo@karkat.de>
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
