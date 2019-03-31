@@ -1,17 +1,15 @@
 " AdvancedMarks/Set.vim: Set marks with more power.
 "
 " DEPENDENCIES:
-"   - ingo/err.vim autoload script
-"   - ingo/mbyte/virtcol.vim autoload script
-"   - ingo/msg.vim autoload script
-"   - ingo/plugin/marks.vim autoload script
+"   - ingo-library.vim plugin
 "
-" Copyright: (C) 2013-2017 Ingo Karkat
+" Copyright: (C) 2013-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	002	01-Apr-2019	Refactoring: Use ingo#pos#Make4().
 "	001	31-Oct-2017	file creation from ingocommands.vim
 
 function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
@@ -43,7 +41,7 @@ function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
 	    \   ingo#mbyte#virtcol#GetColOfVirtCol(l:location[0], l:location[1]) :
 	    \   1
 	    \)
-	    let l:markPos = [0, l:location[0], l:col, 0]
+	    let l:markPos = ingo#pos#Make4(l:location[0], l:col)
 
 	    let l:mark = ingo#plugin#marks#Reuse(l:markPos, l:targetMarks)
 	    if empty(l:mark)
