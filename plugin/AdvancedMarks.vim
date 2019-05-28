@@ -1,10 +1,9 @@
 " AdvancedMarks.vim: Work with marks with more power.
 "
 " DEPENDENCIES:
-"   - AdvancedMarks/*.vim autoload scripts
-"   - ingo/err.vim autoload script
+"   - ingo-library.vim plugin
 "
-" Copyright: (C) 2013-2017 Ingo Karkat
+" Copyright: (C) 2013-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -18,8 +17,9 @@ if exists('g:loaded_AdvancedMarks') || (v:version < 700)
 endif
 let g:loaded_AdvancedMarks = 1
 
-command! -bar -nargs=* YankMarks      call AdvancedMarks#Yank#Marks (AdvancedMarks#Yank#Arguments(<f-args>))
-command! -bar -nargs=* YankMarkRanges call AdvancedMarks#Yank#Ranges(AdvancedMarks#Yank#Arguments(<f-args>))
+command! -bar -range=% -nargs=* YankMarksByMark      if ! AdvancedMarks#Yank#Marks (<line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+command! -bar -range=% -nargs=* YankMarkRangesByMark if ! AdvancedMarks#Yank#Ranges(<line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+command! -bar -range=% -nargs=* ReorderMarks         if ! AdvancedMarks#Reorder#Command(<line1>, <line2>, <q-args>) | echoerr ingo#err#Get() | endif
 
 command! -bang -nargs=1 SetMarks if ! AdvancedMarks#Set#Marks(0, <q-args>) | echoerr ingo#err#Get() | endif
 command! -bang -nargs=1 SetMARKS if ! AdvancedMarks#Set#Marks(1, <q-args>) | echoerr ingo#err#Get() | endif
