@@ -1,7 +1,7 @@
 " AdvancedMarks/Yank.vim: Yank marks with more power.
 "
 " DEPENDENCIES:
-"   - ingo/msg.vim autoload script
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2013-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -10,12 +10,14 @@
 "
 " REVISION	DATE		REMARKS
 "	001	31-Oct-2017	file creation from ingocommands.vim
+let s:save_cpo = &cpo
+set cpo&vim
 
-function! AdvancedMarks#Yank#Arguments( ... )
+function! AdvancedMarks#Yank#Arguments( ... ) abort
     let l:marks = 'abcdefghijklmnopqrstuvwxyz'
     let l:register = '"'
     if a:0 > 2
-	call ingo#msg#ErrorMsg('Too many arguments')
+	call ingo#err#Set('Too many arguments')
 	return []
     elseif a:0 == 2
 	let l:marks = a:1
@@ -30,9 +32,9 @@ function! AdvancedMarks#Yank#Arguments( ... )
 
     return [l:marks, l:register]
 endfunction
-function! AdvancedMarks#Yank#Marks( startLnum, endLnum, arguments )
+function! AdvancedMarks#Yank#Marks( startLnum, endLnum, arguments ) abort
     if empty(a:arguments)
-	return
+	return 0
     endif
     let [l:marks, l:register] = a:arguments
     let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
@@ -41,13 +43,18 @@ function! AdvancedMarks#Yank#Marks( startLnum, endLnum, arguments )
     let l:yankedMarks = ''
     for l:mark in split(l:marks, '\zs')
 	let [l:bufNr, l:lnum] = getpos("'" . l:mark)[0:1]
-	if l:bufNr != 0 && (l:bufNr != bufnr('') || l:lnum <= 0 || l:lnum < l:startLnum || l:lnum > l:endLnum)
+	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:lnum <= 0 || l:lnum < l:startLnum || l:lnum > l:endLnum
 	    continue
 	endif
 
 	let l:yankedMarks .= l:mark
 	let l:lines .= getline(l:lnum) . "\n"
     endfor
+
+    if empty(l:lines)
+	call ingo#err#Set('No marks found')
+	return 0
+    endif
 
     call setreg(l:register, l:lines, 'V')
 
@@ -57,10 +64,12 @@ function! AdvancedMarks#Yank#Marks( startLnum, endLnum, arguments )
     \   len(l:yankedMarks) == 1 ? '' : 's',
     \   join(split(l:yankedMarks, '\zs'), ', ')
     \) . (l:register ==# '"' ? '' : ' into register ' . l:register))
+
+    return 1
 endfunction
-function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments )
+function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments ) abort
     if empty(a:arguments)
-	return
+	return 0
     endif
     let [l:marks, l:register] = a:arguments
     let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
@@ -75,7 +84,7 @@ function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments )
 
 	let l:upperMark = toupper(l:lowerMark)
 	let [l:bufNr, l:upperLnum] = getpos("'" . l:upperMark)[0:1]
-	if l:bufNr != 0 && (l:bufNr != bufnr('') || l:upperLnum <= 0 || l:upperLnum < l:lowerLnum || l:lowerLnum > l:endLnum || l:upperLnum < l:startLnum)
+	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:upperLnum <= 0 || l:upperLnum < l:lowerLnum || l:lowerLnum > l:endLnum || l:upperLnum < l:startLnum
 	    continue
 	endif
 
@@ -88,6 +97,11 @@ function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments )
 	let l:lines += l:linesBetweenMarks
     endfor
 
+    if empty(l:lines)
+	call ingo#err#Set('No mark ranges found')
+	return 0
+    endif
+
     call setreg(l:register, join(l:lines + [''], "\n"), 'V')
 
     call ingo#msg#StatusMsg(printf('Yanked %d line%s from mark ranges %s %s',
@@ -96,6 +110,10 @@ function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments )
     \   len(l:yankedMarks) == 1 ? '' : 's',
     \   join(split(l:yankedMarks, '\zs'), ', ')
     \) . (l:register ==# '"' ? '' : ' into register ' . l:register))
+
+    return 1
 endfunction
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
