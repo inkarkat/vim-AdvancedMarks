@@ -32,23 +32,29 @@ function! AdvancedMarks#Yank#Arguments( ... ) abort
 
     return [l:marks, l:register]
 endfunction
-function! AdvancedMarks#Yank#Marks( startLnum, endLnum, arguments ) abort
+function! AdvancedMarks#Yank#FilterMarks( startLnum, endLnum, markList ) abort
+    let l:result = []
+    for l:mark in a:markList
+	let [l:bufNr, l:lnum] = getpos("'" . l:mark)[0:1]
+	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:lnum <= 0 || l:lnum < a:startLnum || l:lnum > a:endLnum
+	    continue
+	endif
+
+	call add(l:result, l:mark)
+    endfor
+    return l:result
+endfunction
+function! AdvancedMarks#Yank#Marks( FilterAndOrder, startLnum, endLnum, arguments ) abort
     if empty(a:arguments)
 	return 0
     endif
     let [l:marks, l:register] = a:arguments
-    let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
 
     let l:lines = ''
     let l:yankedMarks = ''
-    for l:mark in split(l:marks, '\zs')
-	let [l:bufNr, l:lnum] = getpos("'" . l:mark)[0:1]
-	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:lnum <= 0 || l:lnum < l:startLnum || l:lnum > l:endLnum
-	    continue
-	endif
-
+    for l:mark in call(a:FilterAndOrder, [a:startLnum, a:endLnum, split(l:marks, '\zs')])
 	let l:yankedMarks .= l:mark
-	let l:lines .= getline(l:lnum) . "\n"
+	let l:lines .= getline(line("'" . l:mark)) . "\n"
     endfor
 
     if empty(l:lines)
