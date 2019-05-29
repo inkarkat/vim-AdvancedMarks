@@ -9,6 +9,13 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	002	30-May-2019	Report no marks found as error instead of
+"                               printing a stupid status message.
+"                               ENH: Pass range to consider.
+"                               Pass a:FilterAndOrder, and extract filtering
+"                               of existing marks (within the passed range) to
+"                               AdvancedMarks#Yank#FilterMarks(). This also
+"                               enables the alternative ordering by lines.
 "	001	31-Oct-2017	file creation from ingocommands.vim
 let s:save_cpo = &cpo
 set cpo&vim
@@ -36,11 +43,9 @@ function! AdvancedMarks#Yank#FilterMarks( startLnum, endLnum, markList ) abort
     let l:result = []
     for l:mark in a:markList
 	let [l:bufNr, l:lnum] = getpos("'" . l:mark)[0:1]
-	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:lnum <= 0 || l:lnum < a:startLnum || l:lnum > a:endLnum
-	    continue
+	if (l:bufNr == 0 || l:bufNr == bufnr('')) && l:lnum > 0 && l:lnum >= a:startLnum && l:lnum <= a:endLnum
+	    call add(l:result, l:mark)
 	endif
-
-	call add(l:result, l:mark)
     endfor
     return l:result
 endfunction
