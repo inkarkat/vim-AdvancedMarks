@@ -31,18 +31,31 @@ RELATED WORKS								     *
 
 ==============================================================================
 USAGE							 *AdvancedMarks-usage*
-								  *:YankMarks*
-:YankMarks [{marks}] [{register}]
+					*:YankMarksByMark* *:YankMarksByLines*
+:[range]YankMarksByMark [{marks}] [{register}]
 			Yank all marked (with [a-z] / {marks} marks) lines
 			into the default register / {register} (in the order
-			of the marks).
-							     *:YankMarkRanges*
-:YankMarkRanges [{marks}] [{register}]
+			of the marks, default alphabetically or as given).
+:[range]YankMarksByLines [{marks}] [{register}]
+			Same as :YankMarksByMark, but yank marks from begin to
+			end of the buffer.
+			      *:YankMarkRangesByMark* *:YankMarkRangesByLines*
+:[range]YankMarkRangesByMark [{marks}] [{register}]
 			Yank all ranges of lines that start with a lowercase
 			[a-z] / {marks} mark and end with the corresponding
 			uppercase [A-Z] mark in the current buffer into the
 			default register / {register} (in the order of the
 			marks).
+:[range]YankMarkRangesByLines [{marks}] [{register}]
+			Same as :YankMarkRangesByMark, but yank marks from
+			begin to end of the buffer.
+							       *:ReorderMarks*
+:[range]ReorderMarks [{marks}] [{order-expression}]
+			Reorder [a-z] / {marks} marks alphabetically /
+			ascending based on the value returned by
+			{order-expression} (which is evaluated once on each
+			marked line) from begin to end of the buffer.
+
 						       *:SetMarks* *:SetMARKS*
 :SetMarks {lnum[:col]} [...]
 			Set available lowercase marks to the passed lines [and
@@ -114,7 +127,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2013-2018 Ingo Karkat
+Copyright: (C) 2013-2019 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
