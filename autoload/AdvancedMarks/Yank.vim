@@ -73,7 +73,7 @@ function! AdvancedMarks#Yank#Marks( FilterAndOrder, startLnum, endLnum, argument
 
     return 1
 endfunction
-function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments ) abort
+function! AdvancedMarks#Yank#Ranges( FilterAndOrder, startLnum, endLnum, arguments ) abort
     if empty(a:arguments)
 	return 0
     endif
@@ -82,7 +82,7 @@ function! AdvancedMarks#Yank#Ranges( startLnum, endLnum, arguments ) abort
 
     let l:lines = []
     let l:yankedMarks = ''
-    for l:lowerMark in filter(split(l:marks, '\zs'), 'v:val =~# "\\l"')
+    for l:lowerMark in call(a:FilterAndOrder, [l:startLnum, l:endLnum, filter(split(l:marks, '\zs'), 'v:val =~# "\\l"')])
 	let l:lowerLnum = line("'" . l:lowerMark)
 	if l:lowerLnum <= 0
 	    continue
