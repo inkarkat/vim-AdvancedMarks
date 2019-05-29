@@ -1,6 +1,7 @@
 " AdvancedMarks/Reorder.vim: Reorder marks.
 "
 " DEPENDENCIES:
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -18,15 +19,43 @@ function! AdvancedMarks#Reorder#Command( startLnum, endLnum, arguments ) abort
     let [l:marks, l:expression] = s:Parse(a:arguments)
     return AdvancedMarks#Reorder#Reorder(a:startLnum, a:endLnum, l:marks, l:expression)
 endfunction
-function! AdvancedMarks#Reorder#GetMarksInOrder( startLnum, endLnum, markList, ... ) abort
-    let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
+function! s:SortMarks( l1, l2 ) abort
+    let [l:sortee1, l:sortee2] = [a:l1[0], a:l2[0]]
 
-    " TODO
-    return ['a', 'b', 'c']
+    return (type(l:sortee1) == type([]) && type(l:sortee2) == type([]) ?
+    \   ingo#pos#Compare(l:sortee1, l:sortee2) :
+    \   (l:sortee1 ==# l:sortee2 ? 0 : l:sortee1 ># l:sortee2 ? 1 : -1)
+    \)
+endfunction
+function! AdvancedMarks#Reorder#GetMarksInOrder( startLnum, endLnum, markList, ... ) abort
+    let l:expression = (a:0 ? a:1 : '')
+    let l:save_view = winsaveview()
+
+    let l:sorted = []
+    for l:mark in a:markList
+	let [l:bufNr, l:lnum, l:col] = getpos("'" . l:mark)[0:2]
+	if (l:bufNr == 0 || l:bufNr == bufnr('')) && l:lnum > 0 && l:lnum >= a:startLnum && l:lnum <= a:endLnum
+	    if empty(l:expression)
+		let l:sortee = [l:lnum, l:col]
+	    else
+		call cursor(l:lnum, l:col)
+		let l:sortee = eval(a:1)
+	    endif
+	    call add(l:sorted, [l:sortee, l:mark])
+	endif
+    endfor
+
+    call sort(l:sorted, 's:SortMarks')
+    if ! empty(l:expression)
+	call winrestview(l:save_view)   " We've moved the cursor around, restore the original view.
+    endif
+
+    return map(l:sorted, 'v:val[1]')
 endfunction
 function! AdvancedMarks#Reorder#Reorder( startLnum, endLnum, marks, expression ) abort
+    let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
     let l:markList = split(a:marks, '\zs')
-    let l:orderedMarkList = AdvancedMarks#Reorder#GetMarksInOrder(a:startLnum, a:endLnum, l:markList, a:expression)
+    let l:orderedMarkList = AdvancedMarks#Reorder#GetMarksInOrder(l:startLnum, l:endLnum, l:markList, a:expression)
     if empty(l:orderedMarkList)
 	call ingo#err#Set('No marks found')
 	return 0
@@ -43,6 +72,7 @@ function! AdvancedMarks#Reorder#Reorder( startLnum, endLnum, marks, expression )
     endfor
 
     call ingo#msg#StatusMsg(printf('Reordered %d mark%s', len(l:orderedMarkList), (len(l:orderedMarkList) == 1 ? '' : 's')))
+    call ingo#event#TriggerCustom('MarksUpdated')
     return 1
 endfunction
 
