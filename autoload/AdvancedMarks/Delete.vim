@@ -1,10 +1,10 @@
 " AdvancedMarks/Delete.vim: Delete marks with more power.
 "
 " DEPENDENCIES:
-"   - ingo/err.vim autoload script
-"   - ingo/str/frompattern.vim autoload script
+"   - ingo-library.vim plugin
+"   - ArgsAndMore.vim plugin
 "
-" Copyright: (C) 2013-2017 Ingo Karkat
+" Copyright: (C) 2013-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>

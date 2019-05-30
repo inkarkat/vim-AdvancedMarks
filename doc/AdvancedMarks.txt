@@ -94,6 +94,8 @@ DEPENDENCIES					  *AdvancedMarks-dependencies*
 - Requires Vim 7.0 or higher.
 - Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.038 or
   higher.
+- Requires the |ArgsAndMore.vim| plugin (vimscript #4152), version 1.00 or
+  higher (only for :Delmarks! deletion in all buffers).
 
 ==============================================================================
 CONFIGURATION					 *AdvancedMarks-configuration*
