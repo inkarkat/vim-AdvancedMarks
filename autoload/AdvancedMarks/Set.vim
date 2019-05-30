@@ -12,6 +12,9 @@
 "	002	01-Apr-2019	Refactoring: Use ingo#pos#Make4().
 "	001	31-Oct-2017	file creation from ingocommands.vim
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
     let l:records = split(a:arguments, '[^[:digit:]:]\+')
     let l:locations =
@@ -71,4 +74,6 @@ function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
     endtry
 endfunction
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

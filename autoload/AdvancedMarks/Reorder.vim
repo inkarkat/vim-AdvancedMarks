@@ -10,6 +10,8 @@
 "
 " REVISION	DATE		REMARKS
 "	001	29-May-2019	file creation
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! s:Parse( arguments ) abort
     let [l:marks, l:expression] = matchlist(a:arguments, '^\%(\([a-zA-Z]*\)\%(\s\+\|$\)\)\?\(.*$\)\?')[1:2]
@@ -76,4 +78,6 @@ function! AdvancedMarks#Reorder#Reorder( startLnum, endLnum, marks, expression )
     return 1
 endfunction
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
