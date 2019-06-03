@@ -22,3 +22,7 @@ function! SetMarks() abort
     36mark X
     40mark Z
 endfunction
+
+function! IsYankedLnums( lnums, description ) abort
+    call vimtap#Is(@", join(split(a:lnums, ' ') + [''], "\n"), a:description)
+endfunction

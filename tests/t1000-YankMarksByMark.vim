@@ -5,18 +5,18 @@ call vimtest#StartTap()
 call vimtap#Plan(5)
 
 YankMarksByMark
-call vimtap#Is(@", "13\n10\n14\n11\n3\n4\n4\n20\n18\n30\n31\n32\n", 'yank all lowercase marks')
+call IsYankedLnums('13 10 14 11 3 4 4 20 18 30 31 32', 'yank all lowercase marks')
 
 10,20YankMarksByMark
-call vimtap#Is(@", "13\n10\n14\n11\n20\n18\n", 'yank lowercase marks within 10,20')
+call IsYankedLnums('13 10 14 11 20 18', 'yank lowercase marks within 10,20')
 
 YankMarksByMark zyjkab
-call vimtap#Is(@", "32\n31\n20\n18\n13\n10\n", 'yank passed lowercase marks')
+call IsYankedLnums('32 31 20 18 13 10', 'yank passed lowercase marks')
 
 1,10YankMarksByMark bdefgh
-call vimtap#Is(@", "10\n3\n4\n4\n", 'yank passed lowercase marks within 1,10')
+call IsYankedLnums('10 3 4 4', 'yank passed lowercase marks within 1,10')
 
 YankMarksByMark AZDazd
-call vimtap#Is(@", "2\n40\n8\n13\n32\n11\n", 'yank passed uppercase and lowercase marks')
+call IsYankedLnums('2 40 8 13 32 11', 'yank passed uppercase and lowercase marks')
 
 call vimtest#Quit()
