@@ -51,10 +51,11 @@ USAGE							 *AdvancedMarks-usage*
 			begin to end of the buffer.
 							       *:ReorderMarks*
 :[range]ReorderMarks [{marks}] [{order-expression}]
-			Reorder [a-z] / {marks} marks alphabetically /
-			ascending based on the value returned by
-			{order-expression} (which is evaluated once on each
-			marked line) from begin to end of the buffer.
+			Reorder [a-z] / {marks} marks alphabetically / in the
+			order of given {marks} / ascending based on the value
+			returned by {order-expression} (which is evaluated
+			once on each marked line) from begin to end of the
+			buffer.
 
 						       *:SetMarks* *:SetMARKS*
 :SetMarks {lnum[:col]} [...]

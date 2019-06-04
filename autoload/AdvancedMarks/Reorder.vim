@@ -66,8 +66,8 @@ function! AdvancedMarks#Reorder#Reorder( startLnum, endLnum, marks, expression )
 	return 1
     endif
 
-    let l:originalMarkPositions = ingo#dict#FromItems(map(l:markList, '[v:val, getpos("''" . v:val)]'))
-    let l:foundMarksInOrder = sort(copy(l:orderedMarkList))
+    let l:originalMarkPositions = ingo#dict#FromItems(map(copy(l:markList), '[v:val, getpos("''" . v:val)]'))
+    let l:foundMarksInOrder = filter(copy(l:markList), 'index(l:orderedMarkList, v:val) != -1')
 
     for l:mark in l:orderedMarkList
 	call setpos("'" . remove(l:foundMarksInOrder, 0), l:originalMarkPositions[l:mark])
