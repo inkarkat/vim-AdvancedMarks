@@ -24,6 +24,7 @@ function! SetMarks() abort
     40mark Z
 endfunction
 
-function! IsYankedLnums( lnums, description ) abort
-    call vimtap#Is(@", join(split(a:lnums, ' ') + [''], "\n"), a:description)
+function! IsYankedLnums( ... ) abort
+    let [l:register, l:lnums, l:description] = (a:0 == 2 ? [@"] + a:000 : a:000)
+    call vimtap#Is(l:register, join(split(l:lnums, ' ') + [''], "\n"), l:description)
 endfunction
