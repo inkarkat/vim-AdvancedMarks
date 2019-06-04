@@ -3,7 +3,10 @@ call vimtest#AddDependency('vim-ingo-library')
 runtime plugin/AdvancedMarks.vim
 
 function! SetMarks() abort
-    call append(0, range(1, 40))
+    if ingo#buffer#IsEmpty()
+	call append(0, range(1, 40))
+    endif
+
     2mark A
     3mark e
     4mark f
@@ -27,4 +30,10 @@ endfunction
 function! IsYankedLnums( ... ) abort
     let [l:register, l:lnums, l:description] = (a:0 == 2 ? [@"] + a:000 : a:000)
     call vimtap#Is(l:register, join(split(l:lnums, ' ') + [''], "\n"), l:description)
+endfunction
+
+function! IsPlacedMarks( markedPlaces, description ) abort
+    let l:marks = keys(a:markedPlaces)
+    let l:actual = ingo#dict#FromItems(map(l:marks, '[v:val, line("''" . v:val)]'))
+    call vimtap#Is(l:actual, a:markedPlaces, a:description)
 endfunction
