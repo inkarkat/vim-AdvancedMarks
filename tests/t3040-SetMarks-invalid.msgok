@@ -1,0 +1,7 @@
+Set 5 marks: a:9:8 b:9:14 c:9:13 d:10:6 e:10:30
+
+Invalid locations: b:9:99 c:9:13 e:10:30
+
+Set 4 marks: A:24:22 B:24:20 C:32:0 D:99:0
+
+Invalid locations: A:24:30 C:32 D:99:99

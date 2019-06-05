@@ -7,6 +7,7 @@ function! SetMarks() abort
 	call append(0, range(1, 40))
     endif
 
+    delmarks a-zA-Z
     2mark A
     3mark e
     4mark f
