@@ -52,11 +52,12 @@ function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
 	    endif
 
 	    let l:renderedLocation = l:location[0] . (empty(l:location[1]) ? '' : ':' . l:location[1])
-	    if setpos("'" . l:mark, l:markPos) == 0
+	    let l:m = "'" . l:mark
+	    if setpos(l:m, l:markPos) == 0
 		if empty(getline(l:location[0])[l:location[1] :])
 		    call add(l:invalidLocations, printf('%s:%s', l:mark, l:renderedLocation))
 		endif
-		call add(l:setMarks, printf('%s:%s', l:mark, l:renderedLocation))
+		call add(l:setMarks, printf('%s:%d:%d', l:mark, line(l:m), virtcol(l:m)))
 	    else
 		call add(l:invalidLocations, l:renderedLocation)
 	    endif
