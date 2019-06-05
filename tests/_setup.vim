@@ -34,6 +34,7 @@ endfunction
 
 function! IsPlacedMarks( markedPlaces, description ) abort
     let l:marks = keys(a:markedPlaces)
-    let l:actual = ingo#dict#FromItems(map(l:marks, '[v:val, line("''" . v:val)]'))
+    let l:markedPlaces = map(a:markedPlaces, 'type(v:val) == type([]) ? v:val : [v:val, 1]')
+    let l:actual = ingo#dict#FromItems(map(l:marks, '[v:val, getpos("''" . v:val)[1:2]]'))
     call vimtap#Is(l:actual, a:markedPlaces, a:description)
 endfunction
