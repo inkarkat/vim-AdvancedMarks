@@ -65,7 +65,7 @@ function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
 	call ingo#msg#StatusMsg(printf('Set %d mark%s: %s', len(l:setMarks), (len(l:setMarks) == 1 ? '' : 's'), join(l:setMarks, ' ')))
 	return 1
     catch /^ReserveMarks:/
-	call ingo#err#Set(printf('Ran out of marks; %d location%s not marked.', len(l:locations), (len(l:locations) == 1 ? '' : 's')))
+	call ingo#err#Set(printf('Ran out of marks; %d location%s not marked.', len(l:locations) + 1, (len(l:locations) == 0 ? '' : 's')))
 	return 0
     finally
 	if len(l:invalidLocations) > 0
