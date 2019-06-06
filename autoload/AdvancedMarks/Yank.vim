@@ -20,6 +20,19 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:ExpandRange( startMark, endMark ) abort
+    if a:startMark . a:endMark !~# '^\%(\l\l\|[[:upper:][:digit:]]\{2}\)$'
+	throw printf('AdvancedMarks: Invalid mark range: %s-%s', a:startMark, a:endMark)
+    endif
+    let [l:start, l:end] = [char2nr(a:startMark), char2nr(a:endMark)]
+    if l:start > l:end
+	throw printf('AdvancedMarks: Invalid mark range: %s-%s', a:startMark, a:endMark)
+    endif
+    return join(map(range(l:start, l:end), 'nr2char(v:val)'), '')
+endfunction
+function! s:ExpandMarks( marks ) abort
+    return substitute(a:marks, '\(.\?\)-\(.\?\)', '\=s:ExpandRange(submatch(1), submatch(2))', 'g')
+endfunction
 function! s:ParseArguments( ... ) abort
     let l:marks = 'abcdefghijklmnopqrstuvwxyz'
     let l:register = '"'
@@ -27,13 +40,13 @@ function! s:ParseArguments( ... ) abort
     if a:0 > 2
 	throw 'AdvancedMarks: Too many arguments'
     elseif a:0 == 2
-	let l:marks = a:1
+	let l:marks = s:ExpandMarks(a:1)
 	let l:register = a:2
     elseif a:0 == 1
 	if len(a:1) == 1
 	    let l:register = a:1
 	else
-	    let l:marks = a:1
+	    let l:marks = s:ExpandMarks(a:1)
 	endif
     endif
 
