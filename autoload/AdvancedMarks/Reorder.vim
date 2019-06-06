@@ -14,8 +14,8 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:Parse( arguments ) abort
-    let [l:marks, l:expression] = matchlist(a:arguments, '^\%(\([a-zA-Z]*\)\%(\s\+\|$\)\)\?\(.*$\)\?')[1:2]
-    return [(empty(l:marks) ? 'abcdefghijklmnopqrstuvwxyz' : l:marks), l:expression]
+    let [l:marks, l:expression] = matchlist(a:arguments, '^\%(\([-a-zA-Z]*\)\%(\s\+\|$\)\)\?\(.*$\)\?')[1:2]
+    return [(empty(l:marks) ? 'abcdefghijklmnopqrstuvwxyz' : AdvancedMarks#ExpandMarks(l:marks)), l:expression]
 endfunction
 function! AdvancedMarks#Reorder#Command( startLnum, endLnum, arguments ) abort
     let [l:marks, l:expression] = s:Parse(a:arguments)
