@@ -1,4 +1,5 @@
 call vimtest#AddDependency('vim-ingo-library')
+call vimtest#AddDependency('vim-ArgsAndMore')
 
 runtime plugin/AdvancedMarks.vim
 
@@ -26,6 +27,17 @@ function! SetMarks() abort
     32mark z
     36mark X
     40mark Z
+endfunction
+
+function! SetMarksInBuffers() abort
+    call SetMarks()
+    split example.txt
+    delmarks a-z
+    9mark B
+    24mark C
+    22mark w
+    31mark i
+    wincmd w
 endfunction
 
 function! IsYankedLnums( ... ) abort
