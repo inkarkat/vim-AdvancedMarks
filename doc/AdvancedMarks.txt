@@ -5,7 +5,6 @@
 description			|AdvancedMarks-description|
 usage				|AdvancedMarks-usage|
 installation			|AdvancedMarks-installation|
-configuration			|AdvancedMarks-configuration|
 integration			|AdvancedMarks-integration|
 limitations			|AdvancedMarks-limitations|
 known problems			|AdvancedMarks-known-problems|
@@ -95,16 +94,9 @@ DEPENDENCIES					  *AdvancedMarks-dependencies*
 - Requires Vim 7.0 or higher.
 - Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.038 or
   higher.
-- Requires the |ArgsAndMore.vim| plugin (vimscript #4152), version 1.00 or
+- Requires the |ArgsAndMore.vim| plugin (vimscript #4152), version 2.11 or
   higher (only for :Delmarks! deletion in all buffers).
 
-==============================================================================
-CONFIGURATION					 *AdvancedMarks-configuration*
-
-For a permanent configuration, put the following commands into your |vimrc|:
-configvar
-							 *AdvancedMarks-remap*
-plugmap
 ==============================================================================
 INTEGRATION					   *AdvancedMarks-integration*
 

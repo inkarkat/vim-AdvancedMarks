@@ -17,7 +17,7 @@ function! AdvancedMarks#Delete#Marks( isBang, marks )
 	if empty(a:marks)
 	    if a:isBang
 		delmarks A-Z
-		execute 'Bufdo delmarks a-z'
+		execute 'Bufdo! delmarks a-z'
 		wviminfo!
 	    else
 		delmarks A-Za-z
@@ -32,7 +32,7 @@ function! AdvancedMarks#Delete#Marks( isBang, marks )
 		endif
 
 		if ! empty(l:bufferMarks)
-		    execute 'Bufdo delmarks' l:bufferMarks
+		    execute 'Bufdo! delmarks' l:bufferMarks
 		endif
 
 		wviminfo!
