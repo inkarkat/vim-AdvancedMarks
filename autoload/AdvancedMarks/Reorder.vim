@@ -18,8 +18,13 @@ function! s:Parse( arguments ) abort
     return [(empty(l:marks) ? 'abcdefghijklmnopqrstuvwxyz' : AdvancedMarks#ExpandMarks(l:marks)), l:expression]
 endfunction
 function! AdvancedMarks#Reorder#Command( startLnum, endLnum, arguments ) abort
-    let [l:marks, l:expression] = s:Parse(a:arguments)
-    return AdvancedMarks#Reorder#Reorder(a:startLnum, a:endLnum, l:marks, l:expression)
+    try
+	let [l:marks, l:expression] = s:Parse(a:arguments)
+	return AdvancedMarks#Reorder#Reorder(a:startLnum, a:endLnum, l:marks, l:expression)
+    catch /^AdvancedMarks:/
+	call ingo#err#SetCustomException('AdvancedMarks')
+	return 0
+    endtry
 endfunction
 function! s:SortMarks( l1, l2 ) abort
     let [l:sortee1, l:sortee2] = [a:l1[0], a:l2[0]]
