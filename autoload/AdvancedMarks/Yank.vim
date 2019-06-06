@@ -20,12 +20,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! AdvancedMarks#Yank#Arguments( ... ) abort
+function! s:ParseArguments( ... ) abort
     let l:marks = 'abcdefghijklmnopqrstuvwxyz'
     let l:register = '"'
+
     if a:0 > 2
-	call ingo#err#Set('Too many arguments')
-	return []
+	throw 'AdvancedMarks: Too many arguments'
     elseif a:0 == 2
 	let l:marks = a:1
 	let l:register = a:2
@@ -49,80 +49,88 @@ function! AdvancedMarks#Yank#FilterMarks( startLnum, endLnum, markList ) abort
     endfor
     return l:result
 endfunction
-function! AdvancedMarks#Yank#Marks( FilterAndOrder, startLnum, endLnum, arguments ) abort
-    if empty(a:arguments)
+function! AdvancedMarks#Yank#Marks( FilterAndOrder, startLnum, endLnum, ... ) abort
+    try
+	let [l:marks, l:register] = call('s:ParseArguments', a:000)
+
+	let l:lines = ''
+	let l:yankedMarks = ''
+	for l:mark in call(a:FilterAndOrder, [a:startLnum, a:endLnum, split(l:marks, '\zs')])
+	    let l:yankedMarks .= l:mark
+	    let l:lines .= getline(line("'" . l:mark)) . "\n"
+	endfor
+
+	if empty(l:lines)
+	    call ingo#err#Set('No marks found')
+	    return 0
+	endif
+
+	call setreg(l:register, l:lines, 'V')
+
+	call ingo#msg#StatusMsg(printf('Yanked %d line%s from mark%s %s',
+	\   len(l:yankedMarks),
+	\   len(l:yankedMarks) == 1 ? '' : 's',
+	\   len(l:yankedMarks) == 1 ? '' : 's',
+	\   join(split(l:yankedMarks, '\zs'), ', ')
+	\) . (l:register ==# '"' ? '' : ' into register ' . l:register))
+
+	return 1
+    catch /^AdvancedMarks:/
+	call ingo#err#SetCustomException('AdvancedMarks')
 	return 0
-    endif
-    let [l:marks, l:register] = a:arguments
-
-    let l:lines = ''
-    let l:yankedMarks = ''
-    for l:mark in call(a:FilterAndOrder, [a:startLnum, a:endLnum, split(l:marks, '\zs')])
-	let l:yankedMarks .= l:mark
-	let l:lines .= getline(line("'" . l:mark)) . "\n"
-    endfor
-
-    if empty(l:lines)
-	call ingo#err#Set('No marks found')
-	return 0
-    endif
-
-    call setreg(l:register, l:lines, 'V')
-
-    call ingo#msg#StatusMsg(printf('Yanked %d line%s from mark%s %s',
-    \   len(l:yankedMarks),
-    \   len(l:yankedMarks) == 1 ? '' : 's',
-    \   len(l:yankedMarks) == 1 ? '' : 's',
-    \   join(split(l:yankedMarks, '\zs'), ', ')
-    \) . (l:register ==# '"' ? '' : ' into register ' . l:register))
-
-    return 1
+    endtry
 endfunction
-function! AdvancedMarks#Yank#Ranges( FilterAndOrder, startLnum, endLnum, arguments ) abort
-    if empty(a:arguments)
+function! AdvancedMarks#Yank#Ranges( FilterAndOrder, startLnum, endLnum, ... ) abort
+    try
+	let [l:marks, l:register] = call('s:ParseArguments', a:000)
+	let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
+
+	let l:lines = []
+	let l:yankedMarks = ''
+	for l:lowerMark in call(a:FilterAndOrder, [l:startLnum, l:endLnum, filter(split(l:marks, '\zs'), 'v:val =~# "\\l"')])
+	    let l:lowerLnum = line("'" . l:lowerMark)
+	    if l:lowerLnum <= 0
+		continue
+	    endif
+
+	    let l:upperMark = toupper(l:lowerMark)
+	    let [l:bufNr, l:upperLnum] = getpos("'" . l:upperMark)[0:1]
+	    if (l:bufNr != 0 && l:bufNr != bufnr('')) ||
+	    \   (l:upperLnum <= 0) ||
+	    \   (l:upperLnum < l:lowerLnum) ||
+	    \   (l:lowerLnum > l:endLnum) ||
+	    \   (l:upperLnum < l:startLnum)
+		continue
+	    endif
+
+	    let l:linesBetweenMarks = getline(max([l:lowerLnum, l:startLnum]), min([l:upperLnum, l:endLnum]))
+	    if empty(l:linesBetweenMarks)
+		continue
+	    endif
+
+	    let l:yankedMarks .= l:lowerMark
+	    let l:lines += l:linesBetweenMarks
+	endfor
+
+	if empty(l:lines)
+	    call ingo#err#Set('No mark ranges found')
+	    return 0
+	endif
+
+	call setreg(l:register, join(l:lines + [''], "\n"), 'V')
+
+	call ingo#msg#StatusMsg(printf('Yanked %d line%s from mark ranges %s %s',
+	\   len(l:lines),
+	\   len(l:yankedMarks) == 1 ? '' : 's',
+	\   len(l:yankedMarks) == 1 ? '' : 's',
+	\   join(split(l:yankedMarks, '\zs'), ', ')
+	\) . (l:register ==# '"' ? '' : ' into register ' . l:register))
+
+	return 1
+    catch /^AdvancedMarks:/
+	call ingo#err#SetCustomException('AdvancedMarks')
 	return 0
-    endif
-    let [l:marks, l:register] = a:arguments
-    let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)]
-
-    let l:lines = []
-    let l:yankedMarks = ''
-    for l:lowerMark in call(a:FilterAndOrder, [l:startLnum, l:endLnum, filter(split(l:marks, '\zs'), 'v:val =~# "\\l"')])
-	let l:lowerLnum = line("'" . l:lowerMark)
-	if l:lowerLnum <= 0
-	    continue
-	endif
-
-	let l:upperMark = toupper(l:lowerMark)
-	let [l:bufNr, l:upperLnum] = getpos("'" . l:upperMark)[0:1]
-	if (l:bufNr != 0 && l:bufNr != bufnr('')) || l:upperLnum <= 0 || l:upperLnum < l:lowerLnum || l:lowerLnum > l:endLnum || l:upperLnum < l:startLnum
-	    continue
-	endif
-
-	let l:linesBetweenMarks = getline(max([l:lowerLnum, l:startLnum]), min([l:upperLnum, l:endLnum]))
-	if empty(l:linesBetweenMarks)
-	    continue
-	endif
-
-	let l:yankedMarks .= l:lowerMark
-	let l:lines += l:linesBetweenMarks
-    endfor
-
-    if empty(l:lines)
-	call ingo#err#Set('No mark ranges found')
-	return 0
-    endif
-
-    call setreg(l:register, join(l:lines + [''], "\n"), 'V')
-
-    call ingo#msg#StatusMsg(printf('Yanked %d line%s from mark ranges %s %s',
-    \   len(l:lines),
-    \   len(l:yankedMarks) == 1 ? '' : 's',
-    \   len(l:yankedMarks) == 1 ? '' : 's',
-    \   join(split(l:yankedMarks, '\zs'), ', ')
-    \) . (l:register ==# '"' ? '' : ' into register ' . l:register))
-
-    return 1
+    endtry
 endfunction
 
 let &cpo = s:save_cpo

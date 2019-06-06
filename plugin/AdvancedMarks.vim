@@ -25,13 +25,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 command! -bar -range=% -nargs=* YankMarksByMark
-\ if ! AdvancedMarks#Yank#Marks(function('AdvancedMarks#Yank#FilterMarks'), <line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+\ if ! AdvancedMarks#Yank#Marks(function('AdvancedMarks#Yank#FilterMarks'), <line1>, <line2>, <f-args>) | echoerr ingo#err#Get() | endif
 command! -bar -range=% -nargs=* YankMarksByLines
-\ if ! AdvancedMarks#Yank#Marks(function('AdvancedMarks#Reorder#GetMarksInOrder'), <line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+\ if ! AdvancedMarks#Yank#Marks(function('AdvancedMarks#Reorder#GetMarksInOrder'), <line1>, <line2>, <f-args>) | echoerr ingo#err#Get() | endif
 command! -bar -range=% -nargs=* YankMarkRangesByMark
-\ if ! AdvancedMarks#Yank#Ranges(function('AdvancedMarks#Yank#FilterMarks'), <line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+\ if ! AdvancedMarks#Yank#Ranges(function('AdvancedMarks#Yank#FilterMarks'), <line1>, <line2>, <f-args>) | echoerr ingo#err#Get() | endif
 command! -bar -range=% -nargs=* YankMarkRangesByLines
-\ if ! AdvancedMarks#Yank#Ranges(function('AdvancedMarks#Reorder#GetMarksInOrder'), <line1>, <line2>, AdvancedMarks#Yank#Arguments(<f-args>)) | echoerr ingo#err#Get() | endif
+\ if ! AdvancedMarks#Yank#Ranges(function('AdvancedMarks#Reorder#GetMarksInOrder'), <line1>, <line2>, <f-args>) | echoerr ingo#err#Get() | endif
 
 command! -bar -range=% -nargs=* ReorderMarks
 \ if ! AdvancedMarks#Reorder#Command(<line1>, <line2>, <q-args>) | echoerr ingo#err#Get() | endif
