@@ -14,31 +14,27 @@
 
 function! AdvancedMarks#Delete#Marks( isBang, marks )
     try
-	if empty(a:marks)
-	    if a:isBang
-		delmarks A-Z
-		execute 'Bufdo! delmarks a-z'
-		wviminfo!
+	if a:isBang
+	    if empty(a:marks)
+		let l:bufferMarks = 'a-z'
+		let l:globalMarks = 'A-Z'
 	    else
-		delmarks A-Za-z
-	    endif
-	else
-	    if a:isBang
 		let l:bufferMarks = join(ingo#str#frompattern#Get(a:marks, '\l\+-\l\+\|[[:lower:]''`"[\]<>^.(){}]\+', '', 0, 0), '')
 		let l:globalMarks = join(ingo#str#frompattern#Get(a:marks, '[[:upper:][:digit:]]\+-[[:upper:][:digit:]]\+\|[[:upper:][:digit:]]\+', '', 0, 0), '')
-
-		if ! empty(l:globalMarks)
-		    execute 'delmarks' l:globalMarks
-		endif
-
-		if ! empty(l:bufferMarks)
-		    execute 'Bufdo! delmarks' l:bufferMarks
-		endif
-
-		wviminfo!
-	    else
-		execute 'delmarks' a:marks
 	    endif
+
+	    if ! empty(l:globalMarks)
+		execute 'delmarks' l:globalMarks
+	    endif
+
+	    if ! empty(l:bufferMarks)
+		execute 'Bufdo! delmarks' l:bufferMarks
+	    endif
+
+	    wviminfo!
+	else
+	    let l:marks = (empty(a:marks) ? 'A-Za-z' : a:marks)
+	    execute 'delmarks' l:marks
 	endif
 
 	return 1
