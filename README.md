@@ -104,8 +104,8 @@ https://github.com/inkarkat/vim-AdvancedMarks/issues or email (address below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### GOAL
-First published version.
+##### 1.00    09-Jun-2019
+- First published version.
 
 ##### 0.01    01-May-2013
 - Started development.

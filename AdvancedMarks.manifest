@@ -1,0 +1,7 @@
+autoload/AdvancedMarks.vim
+autoload/AdvancedMarks/Delete.vim
+autoload/AdvancedMarks/Reorder.vim
+autoload/AdvancedMarks/Set.vim
+autoload/AdvancedMarks/Yank.vim
+plugin/AdvancedMarks.vim
+doc/AdvancedMarks.txt
