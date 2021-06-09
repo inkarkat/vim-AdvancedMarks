@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2013-2019 Ingo Karkat
+" Copyright: (C) 2013-2021 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -38,7 +38,7 @@ function! AdvancedMarks#Set#Marks( isGlobalMarks, arguments )
     let l:setMarks = []
     try
 	while ! empty(l:locations)
-	    let l:location = map(remove(l:locations, 0), 'str2nr(v:val)')
+	    let l:location = ingo#list#transform#str2nr(remove(l:locations, 0))
 
 	    let l:col = (len(l:location) > 1 ?
 	    \   ingo#mbyte#virtcol#GetColOfVirtCol(l:location[0], l:location[1]) :

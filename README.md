@@ -83,7 +83,7 @@ To uninstall, use the :RmVimball command.
 ### DEPENDENCIES
 
 - Requires Vim 7.0 or higher.
-- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.038 or
+- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.043 or
   higher.
 - Requires the ArgsAndMore.vim plugin ([vimscript #4152](http://www.vim.org/scripts/script.php?script_id=4152)), version 2.11 or
   higher (only for :Delmarks! deletion in all buffers).
@@ -104,6 +104,11 @@ https://github.com/inkarkat/vim-AdvancedMarks/issues or email (address below).
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 1.01    RELEASEME
+-
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.043!__
+
 ##### 1.00    09-Jun-2019
 - First published version.
 
@@ -111,7 +116,7 @@ HISTORY
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2013-2019 Ingo Karkat -
+Copyright: (C) 2013-2021 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
